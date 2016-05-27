@@ -36,7 +36,7 @@ table art is used to store each artile detail content
 +-------+---------------------+------+-----+---------+----------------+
 
 2: crawl bbs section information
-cmd: scrapy crawl bbssect
+cmd: scrapy crawl bbscat
 
 3: crawl bbs content
 cmd: scrapy crawl bbs
