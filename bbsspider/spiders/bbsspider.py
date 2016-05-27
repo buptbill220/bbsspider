@@ -54,10 +54,10 @@ class BbsSpider(scrapy.Spider):
         page_list_url = sel_page.css('li.page-normal > a::attr(href)').extract();
 
         for idx, u in enumerate(auart_url):
-            #print '%d,%s,%s,%s,%s,%s' %(idx, auart_url[idx], auart_title[idx], auart_time[idx], auart_au[idx], auart_hot[idx]);
+            print '%d,%s,%s,%s,%s,%s' %(idx, auart_url[idx], auart_title[idx], auart_time[idx], auart_au[idx*2], auart_hot[idx]);
             next_url = response.urljoin(auart_url[idx]);
             self.store_data({'uptime': auart_time[idx], 'hot': auart_hot[idx],
-                    'title': auart_title[idx], 'author': auart_au[idx],
+                    'title': auart_title[idx], 'author': auart_au[idx*2],
                     'url': next_url, 'table': 'auart'});
             print 'crawl article [%s]' % next_url;
             yield scrapy.Request(next_url, meta={'cookiejar':response.meta['cookiejar']},headers=self.headers, callback=self.parse);
@@ -69,7 +69,7 @@ class BbsSpider(scrapy.Spider):
             pre_page_num = '%d' % (int(cur_page_num[0])-1);
             page_list_num.insert(0, pre_page_num);
         for idx, num in enumerate(page_list_num):
-            #print '%d,%s,%s' %(idx, page_list_num[idx], page_list_url[idx]);
+            print '%d,%s,%s' %(idx, page_list_num[idx], page_list_url[idx]);
             if page_list_num[idx] == '>>':
                 next_url = response.urljoin(page_list_url[idx]);
                 print 'crawl next page [%s]' % next_url;
@@ -93,7 +93,7 @@ class BbsSpider(scrapy.Spider):
             pre_page_num = '%d' % (int(cur_page_num[0])-1);
             page_list_num.insert(0, pre_page_num);
         for idx, num in enumerate(page_list_num):
-            #print '%d,%s,%s' %(idx, page_list_num[idx], page_list_url[idx]);
+            print '%d,%s,%s' %(idx, page_list_num[idx], page_list_url[idx]);
             if page_list_num[idx] == '>>':
                 next_url = response.urljoin(page_list_url[idx]);
                 print 'crawl next article page [%s]' % next_url;
@@ -105,6 +105,7 @@ class BbsSpider(scrapy.Spider):
 
     def store_data(self, data):
         if data['table'] == 'auart':
+            #sql = "update auart set author = '%s' where url = '%s'" % (MySQLdb.escape_string(data['author']),MySQLdb.escape_string(data['url']));
             sql = "insert into auart(uptime, hot, author, title, url) values ('%s',%s,'%s','%s','%s')" % (
                     data['uptime'], data['hot'], MySQLdb.escape_string(data['author']),
                     MySQLdb.escape_string(data['title']), MySQLdb.escape_string(data['url']));
@@ -133,7 +134,7 @@ class BbsSpider(scrapy.Spider):
             yield scrapy.Request(url,meta={'cookiejar':response.meta['cookiejar']},headers=self.headers, callback=self.parse)
 
     def load_start_url(self):
-        sql = 'select url from sect limit 170,20';
+        sql = 'select url from sect';
         rows = self.db.query(sql);
         for row in rows:
             yield const.URL + row[0];

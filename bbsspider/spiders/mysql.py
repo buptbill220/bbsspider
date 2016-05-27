@@ -30,7 +30,8 @@ class MySQL:
             self.cursor.execute(sql)
             self.conn.commit()
         except:
-            print 'update sql[%s] failed' % sql; 
+            #print 'update sql[%s] failed' % sql; 
+            print 'update failed';
     
 if __name__ == '__main__':
     db = MySQL('127.0.0.1', 'root', '', 'bupt', 3306, 'utf8', 5, '');

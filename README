@@ -1,0 +1,48 @@
+this project is only used to crawl bbs.byr.cn data.
+according to authentication mechanism and data stream, i simplify the crawler flow.
+make crawler is easier, smaller and fast.
+
+only 3 steps needed:
+1: create mysql db, tables information show bellow
+
+table sect is used to store each section on the lefp panel
++-------+------------------+------+-----+---------+----------------+
+| Field | Type             | Null | Key | Default | Extra          |
++-------+------------------+------+-----+---------+----------------+
+| id    | int(10) unsigned | NO   | PRI | NULL    | auto_increment |
+| url   | varchar(60)      | NO   | UNI | NULL    |                |
+| name  | varchar(50)      | NO   |     | NULL    |                |
++-------+------------------+------+-----+---------+----------------+
+
+table auart is used to store each article description
++--------+---------------------+------+-----+-------------------+----------------+
+| Field  | Type                | Null | Key | Default           | Extra          |
++--------+---------------------+------+-----+-------------------+----------------+
+| id     | bigint(20) unsigned | NO   | PRI | NULL              | auto_increment |
+| uptime | date                | YES  |     | 2016-05-19        |                |
+| hot    | int(10) unsigned    | NO   |     | 0                 |                |
+| author | varchar(50)         | NO   | MUL | NULL              |                |
+| title  | varchar(100)        | NO   |     | NULL              |                |
+| url    | varchar(80)         | NO   | UNI | http://bbs.byr.cn |                |
++--------+---------------------+------+-----+-------------------+----------------+
+
+table art is used to store each artile detail content
++-------+---------------------+------+-----+---------+----------------+
+| Field | Type                | Null | Key | Default | Extra          |
++-------+---------------------+------+-----+---------+----------------+
+| id    | bigint(20) unsigned | NO   | PRI | NULL    | auto_increment |
+| url   | varchar(80)         | NO   | UNI | NULL    |                |
+| text  | text                | YES  |     | NULL    |                |
++-------+---------------------+------+-----+---------+----------------+
+
+2: crawl bbs section information
+cmd: scrapy crawl bbssect
+
+3: crawl bbs content
+cmd: scrapy crawl bbs
+
+note:
+my crawl is very fast. all bbs article is about 1.1 millions. i just use 6 hours to finish it.
+machine: aliyun ecs, 1GB Mem, 1 Core CPU, 1MB bandwith
+
+because of auth., please replace your account and passwd. in your own project.
