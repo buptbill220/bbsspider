@@ -40,7 +40,7 @@ class BbsCatSpider(scrapy.Spider):
                     print 'current data is new url sec';
                     print panel;
                     nurl = 'http://bbs.byr.cn/section/ajax_list.json?uid=bill220&root=' + panel['id'];
-                    yield scrapy.Request(nurl, meta={'cookiejar':self.cookiejar}, headers=self.headers, callback=self.parse_content);
+                    yield scrapy.Request(nurl, meta={'cookiejar':self.cookiejar}, headers=self.headers, callback=self.parse);
                 else:
                     self.store_data({'url': url, 'name': title.encode('utf8')});
         except:
